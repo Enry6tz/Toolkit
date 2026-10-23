@@ -1,0 +1,32 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import { createReviewEngine } from '../dist/review/session.js';
+import { validateReviewDraft } from '../dist/review/persistence.js';
+
+test('explicit recording boundaries survive persistence without treating matching user labels as boundaries', async () => {
+  const at = new Date().toISOString();
+  const scope = { origin: 'https://preview.example.test', pathname: '/animals' };
+  const engine = createReviewEngine({ now: () => new Date(at) });
+  engine.startSession({ requestId: 'session', objective: 'Grabación', scope, actor: 'user' });
+  const checkpoint = (requestId, label, extra = {}) => engine.checkpoint({ requestId, label, pathname: scope.pathname, ...extra });
+  const start = checkpoint('automatic-start', 'Inicio de la grabación', { recordingBoundary: 'start' });
+  const userStart = checkpoint('user-start', 'Inicio de la grabación');
+  const userStop = checkpoint('user-stop', 'Fin de la grabación');
+  const stop = checkpoint('automatic-stop', 'Fin de la grabación', { recordingBoundary: 'stop' });
+  assert.equal(start.data.recordingBoundary, 'start');
+  assert.equal(stop.data.recordingBoundary, 'stop');
+  assert.equal(Object.hasOwn(userStart.data, 'recordingBoundary'), false);
+  assert.equal(Object.hasOwn(userStop.data, 'recordingBoundary'), false);
+  assert.equal(checkpoint('invalid', 'Invalid boundary', { recordingBoundary: 'pause' }).error.code, 'INVALID_INPUT');
+  const draft = engine.exportDraft();
+  await validateReviewDraft(draft, { origin: scope.origin });
+  const restored = createReviewEngine({ now: () => new Date(at) });
+  assert.equal((await restored.restoreDraft(draft)).status, 'ok');
+  assert.deepEqual(restored.getSnapshot().steps.map(step => step.recordingBoundary), ['start', undefined, undefined, 'stop']);
+  const corrupt = structuredClone(draft);
+  corrupt.snapshot.steps[0].recordingBoundary = 'pause';
+  await assert.rejects(validateReviewDraft(corrupt, { origin: scope.origin }));
+  const legacy = structuredClone(draft);
+  for (const step of legacy.snapshot.steps) delete step.recordingBoundary;
+  await validateReviewDraft(legacy, { origin: scope.origin });
+});

@@ -1,0 +1,48 @@
+{
+  "name": "ai-context-toolbar",
+  "version": "0.9.4",
+  "description": "Aside: project documents, annotations and recorded walkthroughs for your next development iteration.",
+  "type": "module",
+  "license": "UNLICENSED",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Enry6tz/Toolkit.git"
+  },
+  "files": ["dist", "README.md", "docs/architecture.md"],
+  "sideEffects": false,
+  "exports": {
+    ".": { "types": "./dist/react/index.d.ts", "import": "./dist/react/index.js" },
+    "./react": { "types": "./dist/react/index.d.ts", "import": "./dist/react/index.js" },
+    "./core": { "types": "./dist/core/index.d.ts", "import": "./dist/core/index.js" },
+    "./browser": { "types": "./dist/browser/index.d.ts", "import": "./dist/browser/index.js" },
+    "./review": { "types": "./dist/review/index.d.ts", "import": "./dist/review/index.js" },
+    "./config": { "types": "./dist/config/index.d.ts", "import": "./dist/config/index.js" },
+    "./next": { "types": "./dist/next/index.d.ts", "import": "./dist/next/index.js" }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node scripts/copy-assets.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "npm run build && npm run test:node && npm run test:unit",
+    "test:node": "node --test --test-concurrency=2 tests/*.test.mjs",
+    "test:unit": "vitest run",
+    "prepare": "npm run build",
+    "prepack": "npm run build"
+  },
+  "engines": { "node": ">=20.9" },
+  "peerDependencies": {
+    "react": "^18.3.0 || ^19.0.0",
+    "react-dom": "^18.3.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "@types/node": "^22.20.5",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "esbuild": "0.28.2",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "typescript": "5.9.3",
+    "vitest": "4.1.12"
+  }
+}

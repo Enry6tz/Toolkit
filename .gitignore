@@ -1,0 +1,12 @@
+node_modules/
+dist/
+*.tgz
+*.log
+.env
+.env.*
+.private/
+artifacts/
+test-results/
+playwright-report/
+.DS_Store
+Thumbs.db

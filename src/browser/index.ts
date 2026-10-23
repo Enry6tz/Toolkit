@@ -1,0 +1,10 @@
+export { captureContext, inspectElement, isPrivateElement } from './context.js';
+export type { CaptureContextOptions } from './context.js';
+export { installAgentBridge } from './bridge.js';
+export type { AgentBridge, AgentBridgeHandle } from './bridge.js';
+export { createActivityRecorder } from './activity.js';
+export { createSelection, createGroupSelection, installSelection, loadAnnotations, saveAnnotations, resolveAnnotation, selectionElement } from './selection.js';
+export type { SelectionMode, SelectionBounds, SelectionResult } from './selection.js';
+export type { ActivityRecorder, ActivityRecorderOptions } from './activity.js';
+export { installAgentDomTransport, createAgentDomRequestHandler } from './agent-transport.js';
+export type { AgentDomTransport, AgentTransportContext, AgentTransportFile, AgentTransportOptions } from './agent-transport.js';
