@@ -6,13 +6,12 @@ import type { ToolbarLocale } from '../core/locale.js';
 import { listWikiRecordings, WikiRecordingError } from '../browser/wiki-recordings.js';
 import type { WikiRecordingSummary } from '../browser/wiki-recordings.js';
 import { Icon } from './icons.js';
-import { WikiSignIn } from './wiki-sign-in.js';
 
 export function wikiRecordingErrorMessage(error: unknown, locale: ToolbarLocale): string {
   const t = createTranslator(locale);
   const code = error instanceof WikiRecordingError ? error.code : 'unavailable';
   return t({
-    auth: 'Iniciá sesión en Toolkit para ver las grabaciones del proyecto.',
+    auth: 'Autentíquese en la aplicación anfitriona para usar esta integración.',
     forbidden: 'No tenés acceso a las grabaciones de este proyecto.',
     unavailable: 'No se pudieron cargar las grabaciones. Volvé a intentar.',
     invalid: 'Toolkit devolvió datos de grabación no válidos.',
@@ -51,8 +50,7 @@ export function WikiRecordingPicker({ wiki, locale, disabled, onChoose }: {
     {loading ? <p className="empty" role="status">{t('Cargando grabaciones…')}</p>
       : error ? <>
         <p className="empty" role={error instanceof WikiRecordingError && error.code === 'auth' ? 'status' : 'alert'}>{wikiRecordingErrorMessage(error, locale)}</p>
-        {error instanceof WikiRecordingError && error.code === 'auth' ? <WikiSignIn wiki={wiki} locale={locale} />
-          : <button type="button" className="text-button" disabled={disabled} onClick={() => setRetry(value => value + 1)}>{t('Volver a intentar')}</button>}
+        <button type="button" className="text-button" disabled={disabled} onClick={() => setRetry(value => value + 1)}>{t('Volver a intentar')}</button>
       </> : <>
         {items.length > 5 && <label className="field">{t('Buscar grabaciones')}<input type="search" value={query} maxLength={100} onChange={event => setQuery(event.target.value)} /></label>}
         {visible.length ? <ul className="wiki-recording-list" aria-label={t('Grabaciones disponibles')}>

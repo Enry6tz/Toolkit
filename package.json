@@ -9,7 +9,7 @@
     "type": "git",
     "url": "https://github.com/Enry6tz/Toolkit.git"
   },
-  "files": ["dist", "README.md", "docs/architecture.md"],
+  "files": ["dist", "README.md", "docs/architecture.md", "docs/host-integration.md"],
   "sideEffects": false,
   "exports": {
     ".": { "types": "./dist/react/index.d.ts", "import": "./dist/react/index.js" },
@@ -21,7 +21,7 @@
     "./next": { "types": "./dist/next/index.d.ts", "import": "./dist/next/index.js" }
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json && node scripts/copy-assets.mjs",
+    "build": "node scripts/clean-dist.mjs && tsc -p tsconfig.json && node scripts/copy-assets.mjs",
     "check:package": "node scripts/check-package.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "npm run build && npm run test:node && npm run test:unit",

@@ -34,7 +34,7 @@ test('Toolkit wording preserves the bridge contract and bidirectional locale beh
   const en = createTranslator('en');
   const es = createTranslator('es');
   for (const [spanish, english] of [
-    ['Iniciar sesión en Toolkit', 'Sign in to Toolkit'],
+    ['Autentíquese en la aplicación anfitriona para usar esta integración.', 'Authenticate in the host application to use this integration.'],
     ['Compartida en Toolkit. Los cambios locales requieren actualizar.', 'Shared in Toolkit. Local changes must be updated.'],
     ['La grabación cambió en Toolkit. Abrila de nuevo antes de actualizar; tu copia local se conserva.', 'The recording changed in Toolkit. Open it again before updating; your local copy is kept.'],
     ['Ya hay otro Toolkit en esta página.', 'Another Toolkit toolbar is already on this page.'],

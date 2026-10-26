@@ -8,7 +8,7 @@ Record a walkthrough, mark what matters, and take the context to your next chat.
 
 Requires Node.js 20.9+ and React / React DOM 18.3 or 19.
 
-The approved npm package name is `@e6tz/toolkit`. Registry publication is pending scope ownership and maintainer authorization; the command below becomes available after that release:
+The approved npm package name is `@e6tz/toolkit`. Registry publication is pending; the command below becomes available after that release:
 
 ```sh
 npm install @e6tz/toolkit
@@ -85,7 +85,19 @@ Network recording is an explicit preference and observes fetch activity only whi
 
 Markdown and JSON exporters are available from `@e6tz/toolkit/review`. Project documents can be explicitly bundled through `@e6tz/toolkit/config`; all documents shipped to the client are public to recipients of those assets. Optional wiki and live-configuration integrations are configuration-driven, not prerequisites.
 
-The package includes no AI model, chat login, token/key flow, server synchronization or automatic message sending. The conversation and the decision about what to do next belong in your own chat.
+The package includes no AI model, account system, login form or automatic message sending. The conversation and the decision about what to do next belong in your own chat.
+
+## Integrate with a host application
+
+Toolkit, Reports and Flags are independent libraries, not complete hosted applications. They share host-owned authentication, authorization, backend routes and secrets, but have different interfaces.
+
+Toolkit works locally without a backend. With no `wiki`, `liveConfig`, `loadKnowledge`, document-editor `onSave` or `documentsPath`, it makes no integration requests and invents no server route. Local recording, annotations, document copying and Markdown/JSON export do not require login. The bundled font is a package-local asset.
+
+Enable each remote integration explicitly by supplying its URL or callback. A separate master remote flag is not required. Without `documentsPath`, bundled documents have a label and copy action, not a link to an assumed editor. Mount your own editor route before setting this option.
+
+The host owns login and permission enforcement. Toolkit has no embedded login iframe or credential issuance, renewal or storage. Configured wiki requests retain session cookies and CSRF protection; the host must authorize every read and mutation. A hidden or disabled client control is not a security boundary.
+
+See the [host integration guide](docs/host-integration.md) for React/Next examples, endpoint contracts, authentication refresh and teardown. The guide is included in the npm package. A combined self-hosted host application is not supplied by this repository.
 
 ## Entrypoints
 

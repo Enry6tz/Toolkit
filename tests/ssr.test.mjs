@@ -77,3 +77,20 @@ test('Next adapter forwards only the configured document route and respects its 
   assert.equal('config' in configured.props, false);
   assert.equal(AIToolbar({ config: { documentsPath: '/project/docs' }, documentsPath: '/help/docs' }).props.documentsPath, '/help/docs');
 });
+
+test('Next remote integrations are absent by default and explicit host options take precedence', async () => {
+  const { AIToolbar } = await import('@e6tz/toolkit/next');
+  const local = AIToolbar({ environment: 'development' });
+  for (const option of ['wiki', 'liveConfig', 'documentsPath']) assert.equal(local.props[option], undefined);
+  const wiki = { url: 'https://host.example/wiki', manageUrl: 'https://host.example/toolkit/toolbar/projects/one' };
+  const liveConfig = { url: '/host/config', intervalMs: 30000 };
+  const configured = AIToolbar({ config: { wiki, liveConfig, documentsPath: '/host/docs' } });
+  assert.equal(configured.props.wiki, wiki);
+  assert.equal(configured.props.liveConfig, liveConfig);
+  assert.equal(configured.props.documentsPath, '/host/docs');
+  assert.equal('config' in configured.props, false);
+  const otherWiki = { url: 'https://another.example/wiki' }, otherLive = { url: '/other/config' };
+  const explicit = AIToolbar({ config: { wiki, liveConfig }, wiki: otherWiki, liveConfig: otherLive });
+  assert.equal(explicit.props.wiki, otherWiki);
+  assert.equal(explicit.props.liveConfig, otherLive);
+});

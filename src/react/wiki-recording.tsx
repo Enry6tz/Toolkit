@@ -5,7 +5,6 @@ import type { ToolbarLocale } from '../core/locale.js';
 import { createTranslator } from '../core/locale.js';
 import { fetchOutsideRecording } from '../browser/activity.js';
 import { Icon } from './icons.js';
-import { WikiSignIn } from './wiki-sign-in.js';
 
 interface SavedRecording { id: string; sourceSessionId: string; canDelete: boolean; canUpdate?: boolean; version?: string }
 const object = (value: unknown): value is Record<string, unknown> => !!value && typeof value === 'object' && !Array.isArray(value);
@@ -47,7 +46,7 @@ export function WikiRecordingSave({ wiki, locale, sessionId, title, getJson, get
     setBusy(true); setNotice('');
     try {
       const access = await fetchOutsideRecording(window, wiki.manageUrl, { credentials: 'include', cache: 'no-store', redirect: 'error', signal: AbortSignal.timeout(8000), headers: { Accept: 'application/json' } });
-      if (!access.ok) throw new Error(t('Iniciá sesión en la wiki con permiso para editar este proyecto.'));
+      if (!access.ok) throw new Error(t('Autentíquese en la aplicación anfitriona para usar esta integración.'));
       const auth: unknown = await access.json();
       if (!object(auth) || typeof auth.csrfToken !== 'string') throw new Error(t('No se pudo guardar la grabación en la wiki.'));
       if (!remove && saved && (auth.recordingUpdates !== true || !saved.version || saved.canUpdate === false))
@@ -73,7 +72,7 @@ export function WikiRecordingSave({ wiki, locale, sessionId, title, getJson, get
   }
   const updateUnavailable = !!saved && (!supportsUpdates || !saved.version || saved.canUpdate === false);
   return <div className="wiki-recording-store">
-    {!connected ? <WikiSignIn wiki={wiki} locale={locale} /> : <div><button type="button" className="text-button" disabled={busy || !canEdit || updateUnavailable} onClick={() => void change(false)}><Icon name="cloud" />{t(saved ? 'Actualizar en la wiki' : 'Guardar en la wiki')}</button>
+    {!connected ? <p className="subtle" role="status">{t('Autentíquese en la aplicación anfitriona para usar esta integración.')}</p> : <div><button type="button" className="text-button" disabled={busy || !canEdit || updateUnavailable} onClick={() => void change(false)}><Icon name="cloud" />{t(saved ? 'Actualizar en la wiki' : 'Guardar en la wiki')}</button>
       {saved?.canDelete && <button type="button" className="icon-button" disabled={busy} aria-label={t('Eliminar de la wiki')} title={t('Eliminar de la wiki')} onClick={() => void change(true)}><Icon name="trash" /></button>}
     </div>}
     {saved && <p className="subtle">{t('Compartida en Toolkit. Los cambios locales requieren actualizar.')}</p>}

@@ -28,8 +28,9 @@ const archive = packed[0];
 assert.equal(archive.name, '@e6tz/toolkit');
 assert.equal(archive.version, '0.9.4');
 const files = new Set(archive.files.map(file => file.path));
+assert.ok(![...files].some(file => /^dist\/react\/wiki-sign-in\./.test(file)), 'Removed login artifacts must not ship from a reused build');
 for (const file of files) {
-  assert.ok(file.startsWith('dist/') || ['package.json', 'README.md', 'LICENSE', 'docs/architecture.md'].includes(file), `Unexpected packed file: ${file}`);
+  assert.ok(file.startsWith('dist/') || ['package.json', 'README.md', 'LICENSE', 'docs/architecture.md', 'docs/host-integration.md'].includes(file), `Unexpected packed file: ${file}`);
   assert.doesNotMatch(file, /(?:^|\/)\.\.(?:\/|$)|(?:^|\/)\.env(?:\.|$)/);
 }
 for (const entry of Object.values(pkg.exports)) {
@@ -45,10 +46,12 @@ const consumerDependencies = ['react', 'react-dom', '@types/react', '@types/reac
   .map(name => `${name}@${lock.packages[`node_modules/${name}`].version}`);
 npm(['install', '--ignore-scripts', '--no-audit', '--no-fund', '--package-lock=false', join(scratch, archive.filename), ...consumerDependencies], scratch);
 const installed = join(scratch, 'node_modules/@e6tz/toolkit');
+assert.ok(files.has('docs/host-integration.md'), 'Host integration guide must be included');
 assert.equal(await realpath(installed), installed, 'Consumer package must be extracted, not a source symlink');
 const installedPkg = JSON.parse(await readFile(join(installed, 'package.json'), 'utf8'));
 assert.equal(installedPkg.license, 'MIT');
 assert.equal(await readFile(join(installed, 'LICENSE'), 'utf8'), await readFile(join(root, 'LICENSE'), 'utf8'));
+assert.equal(await readFile(join(installed, 'docs/host-integration.md'), 'utf8'), await readFile(join(root, 'docs/host-integration.md'), 'utf8'));
 assert.notEqual(installedPkg.private, true);
 assert.equal(installedPkg.publishConfig.access, 'public');
 
@@ -69,7 +72,7 @@ assert.equal(renderToString(createElement(NextToolbar, { defaultOpen: true })), 
 assert.equal(isToolbarEnabled({ environment: 'production', enabled: true }), false);
 assert.equal(isToolbarEnabled({ environment: 'production', allowProduction: true }), true);
 assert.equal(NextToolbar({ config: { enabled: { production: false } } }).props.allowProduction, false);
-assert.equal(createTranslator('en')('Iniciar sesión en Toolkit'), 'Sign in to Toolkit');
+assert.equal(createTranslator('en')('Autentíquese en la aplicación anfitriona para usar esta integración.'), 'Authenticate in the host application to use this integration.');
 const engine = createReviewEngine({ now: () => new Date('2026-10-14T12:00:00.000Z') });
 assert.equal(engine.getSnapshot().session, null);
 assert.equal(engine.startSession({ requestId: 'start', objective: 'Check package', actor: 'user', scope: { origin: 'https://example.test', pathname: '/' } }).status, 'ok');
@@ -94,10 +97,16 @@ const props = { environment: 'preview' } satisfies react.AIToolbarProps;
 const enabled: boolean = core.isToolbarEnabled(props);
 void [root.AIToolbar, react.AIToolbar, next.AIToolbar, browser.captureContext, review.createReviewEngine, config.defineConfig, enabled];
 `);
+const hostGuide = await readFile(join(installed, 'docs/host-integration.md'), 'utf8');
+let example = 0;
+for (const [, language, source] of hostGuide.matchAll(/```(tsx|ts)\r?\n([\s\S]*?)```/g)) {
+  await writeFile(join(scratch, `host-guide-${++example}.${language}`), source);
+}
+assert.ok(example >= 4, 'Host guide includes runnable React, Next and authentication-refresh examples');
 await writeFile(join(scratch, 'tsconfig.json'), JSON.stringify({ compilerOptions: {
   target: 'ES2022', module: 'NodeNext', moduleResolution: 'NodeNext', strict: true,
-  noEmit: true, skipLibCheck: false, lib: ['ES2022', 'DOM', 'DOM.Iterable'],
-}, include: ['consumer.ts'] }));
+  jsx: 'react-jsx', noEmit: true, skipLibCheck: false, lib: ['ES2022', 'DOM', 'DOM.Iterable'],
+}, include: ['consumer.ts', 'host-guide-*.ts', 'host-guide-*.tsx'] }));
 run(process.execPath, [join(root, 'node_modules/typescript/bin/tsc'), '-p', join(scratch, 'tsconfig.json')], scratch);
 
 const bundle = await build({ stdin: { contents: `import * as sdk from '@e6tz/toolkit/browser'; window.toolkit = sdk;`, resolveDir: scratch }, bundle: true, write: false, format: 'iife', platform: 'browser' });

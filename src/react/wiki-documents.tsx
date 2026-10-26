@@ -6,7 +6,6 @@ import { createTranslator } from '../core/locale.js';
 import { documentMatchesRoute } from '../core/knowledge.js';
 import { fetchOutsideRecording } from '../browser/activity.js';
 import { Icon } from './icons.js';
-import { WikiSignIn } from './wiki-sign-in.js';
 
 interface WikiEditor {
   user: { id: number; name: string };
@@ -53,7 +52,7 @@ export function WikiDocuments({ wiki, locale, pathname, copy }: { wiki: ToolbarW
     finally { setBusy(false); }
   }
   const available = editor?.documents.filter(doc => !doc.general && doc.canEdit) ?? [];
-  if (wiki.manageUrl && !connected) return <div className="wiki-associations"><WikiSignIn wiki={wiki} locale={locale} /></div>;
+  if (wiki.manageUrl && !connected) return <div className="wiki-associations"><p className="subtle" role="status">{t('Autentíquese en la aplicación anfitriona para usar esta integración.')}</p></div>;
   return <>
     <ul className="recording-document-list">{[false, true].map(scoped => {
       const links = (wiki.documents ?? []).filter(link => Boolean(link.routes) === scoped && documentMatchesRoute(link, pathname));
@@ -70,14 +69,14 @@ export function WikiDocuments({ wiki, locale, pathname, copy }: { wiki: ToolbarW
       </Fragment>;
     })}</ul>
     {wiki.manageUrl && <div className="wiki-associations">
-      {!connected ? <WikiSignIn wiki={wiki} locale={locale} />
+      {!connected ? <p className="subtle" role="status">{t('Autentíquese en la aplicación anfitriona para usar esta integración.')}</p>
         : editor?.canEdit ? <button type="button" className="text-button" aria-label={t('Agregar documento a una página')} onClick={() => { setAdding(!adding); setNotice(''); }}><Icon name="plus" />{t('Agregar documento')}</button>
           : <p className="subtle">{t('Acceso de lectura a la wiki.')}</p>}
       {adding && (editor ? available.length && editor.pages.length ? <form onSubmit={event => { event.preventDefault(); void associate(Number(documentId), page, 'add'); }}>
         <label className="field">{t('Documento')}<select required value={documentId} onChange={event => setDocumentId(event.target.value)}><option value="">{t('Elegí un documento')}</option>{available.map(doc => <option key={doc.id} value={doc.id}>{doc.label}</option>)}</select></label>
         <label className="field">{t('Página')}<select required value={page} onChange={event => setPage(event.target.value)}><option value="">{t('Elegí una página')}</option>{editor.pages.map(item => <option key={item.path} value={item.path}>{item.label} · {item.path}</option>)}</select></label>
         <button className="secondary" type="submit" disabled={busy || !documentId || !page}>{t('Agregar a la página')}</button>
-      </form> : <p className="subtle">{t('No hay documentos por página editables o páginas publicadas por el build.')}</p> : <p className="subtle">{t('Iniciá sesión en la wiki con permiso para editar este proyecto.')} <a href={wiki.url} target="_blank" rel="noopener noreferrer">{t('Abrir wiki')}</a></p>)}
+      </form> : <p className="subtle">{t('No hay documentos por página editables o páginas publicadas por el build.')}</p> : <p className="subtle">{t('Autentíquese en la aplicación anfitriona para usar esta integración.')}</p>)}
       {notice && <p className="subtle" role="status">{notice}</p>}
     </div>}
   </>;

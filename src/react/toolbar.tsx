@@ -547,9 +547,9 @@ function MountedToolbar(props: AIToolbarProps & { environment: BuildInfo['enviro
     if (editingId) await finishMark(!activeMark?.note.trim()); setSelecting(false); setHighlight(null); setView('documents'); setOpen(value => !(value && view === 'documents'));
   }
   function documentHref(documentId: string) {
-    const path = props.documentsPath ?? '/ai-context/docs';
-    const safe = path.startsWith('/') && !path.startsWith('//') && !path.includes('\\');
-    const url = new URL(safe ? path : '/ai-context/docs', window.location.origin);
+    const path = props.documentsPath;
+    if (!path || !path.startsWith('/') || path.startsWith('//') || path.includes('\\')) return undefined;
+    const url = new URL(path, window.location.origin);
     url.searchParams.set('document', documentId);
     return `${url.pathname}${url.search}${url.hash}`;
   }
@@ -641,7 +641,10 @@ function MountedToolbar(props: AIToolbarProps & { environment: BuildInfo['enviro
               ...(!scoped && context?.context.rules.length ? [{ id: 'project-rules', label: t('Reglas del proyecto'), content: context.context.rules.join('\n\n') }] : [])];
             return documents.length ? <Fragment key={String(scoped)}>
               <li className="document-group" role="presentation">{t(scoped ? 'Esta página' : 'General')}</li>
-              {documents.map(document => <li key={document.id}><a href={documentHref(document.id)} target="_blank" rel="noopener noreferrer">{document.label}</a><button type="button" className="icon-button" aria-label={t("Copiar {label}", { label: document.label })} title={t("Copiar documento")} disabled={busy} onClick={() => void run(() => copyText(document.content))}><Icon name="copy" /></button></li>)}
+              {documents.map(document => {
+                const href = documentHref(document.id);
+                return <li key={document.id}>{href ? <a href={href} target="_blank" rel="noopener noreferrer">{document.label}</a> : <span>{document.label}</span>}<button type="button" className="icon-button" aria-label={t("Copiar {label}", { label: document.label })} title={t("Copiar documento")} disabled={busy} onClick={() => void run(() => copyText(document.content))}><Icon name="copy" /></button></li>;
+              })}
             </Fragment> : null;
           })}
           </ul> : null}
