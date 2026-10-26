@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import test from 'node:test';
-import { createAgentContext } from 'ai-context-toolbar/core';
-import { installAgentBridge } from 'ai-context-toolbar/browser';
+import { createAgentContext, AGENT_STARTER, createTranslator } from '@e6tz/toolkit/core';
+import { installAgentBridge } from '@e6tz/toolkit/browser';
 
 function snapshot() {
   const content = '# Guía pública\n```html\n<script>datoNoConfiable()</script>\n```\n';
@@ -17,6 +17,7 @@ function snapshot() {
 test('public context Markdown round-trips as one JSON block while preserving literal published documents', () => {
   const input = snapshot();
   const payload = createAgentContext(input);
+  assert.ok(payload.markdown.startsWith('# Toolkit · contexto de esta pestaña'));
   assert.equal(payload.schemaVersion, '1.0');
   assert.equal(payload.context.page.url, 'https://preview.example.test/page');
   assert.doesNotMatch(payload.markdown, /agent-secret|qa@example.test/);
@@ -25,6 +26,24 @@ test('public context Markdown round-trips as one JSON block while preserving lit
   assert.ok(structured);
   assert.deepEqual(JSON.parse(structured[1]), payload.context);
   assert.equal(payload.context.knowledge.documents[0].content, input.knowledge.documents[0].content);
+});
+
+test('Toolkit wording preserves the bridge contract and bidirectional locale behavior', () => {
+  assert.match(AGENT_STARTER, /Toolkit/);
+  assert.ok(AGENT_STARTER.includes("window.__AI_CONTEXT_TOOLBAR__.getContext({version:'2.0'})"));
+  const en = createTranslator('en');
+  const es = createTranslator('es');
+  for (const [spanish, english] of [
+    ['Iniciar sesión en Toolkit', 'Sign in to Toolkit'],
+    ['Compartida en Toolkit. Los cambios locales requieren actualizar.', 'Shared in Toolkit. Local changes must be updated.'],
+    ['La grabación cambió en Toolkit. Abrila de nuevo antes de actualizar; tu copia local se conserva.', 'The recording changed in Toolkit. Open it again before updating; your local copy is kept.'],
+    ['Ya hay otro Toolkit en esta página.', 'Another Toolkit toolbar is already on this page.'],
+  ]) {
+    assert.equal(en(spanish), english);
+    assert.equal(es(english), spanish);
+  }
+  assert.equal(en('Creada por {name}', { name: 'Author' }), 'Created by Author');
+  assert.equal(es('Created by {name}', { name: 'Author' }), 'Creada por Author');
 });
 
 test('public bridge protects its namespace and refuses pending or future reads after disposal', async () => {

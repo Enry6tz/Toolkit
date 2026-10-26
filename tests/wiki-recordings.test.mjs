@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { WikiRecordingError, listWikiRecordings, readWikiRecording } from '../dist/browser/wiki-recordings.js';
 
-const manageUrl = 'https://aside.example/toolkit/toolbar/projects/project-b';
+const manageUrl = 'https://toolkit.example/toolkit/toolbar/projects/project-b';
 const id = '77eb0d6e-5971-4d0a-8c1e-da70e524fc7a';
 const entry = { id, title: 'Recording-77eb0d6e', author: 'Test Author', updatedAt: '2026-10-19T12:00:00.123456Z' };
 const signal = () => new AbortController().signal;
@@ -48,10 +48,10 @@ test('measures titles and author names by Unicode characters, matching the wiki 
 
 test('rejects unscoped or malformed management URLs before fetching', async () => {
   for (const url of [
-    '/toolkit/toolbar/projects/project-b', '//aside.example/toolkit/toolbar/projects/project-b',
+    '/toolkit/toolbar/projects/project-b', '//toolkit.example/toolkit/toolbar/projects/project-b',
     'javascript:alert(1)', manageUrl + '?x=1', manageUrl + '?', manageUrl + '#', manageUrl + '#fragment',
     manageUrl + '/recordings', manageUrl.replace('/project-b', '/..%2fproject-b'), manageUrl.replace('/project-b', '/else/../project-b'),
-    manageUrl.replace('https://', 'https:/'), manageUrl.replace('aside.example', 'user:password@aside.example'),
+    manageUrl.replace('https://', 'https:/'), manageUrl.replace('toolkit.example', 'user:password@toolkit.example'),
     manageUrl + '\\', manageUrl + ' ', manageUrl + '\n',
   ]) {
     const { view, calls } = fake(json({ recordings: [] }));

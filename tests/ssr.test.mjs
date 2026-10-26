@@ -9,12 +9,13 @@ test('all package entry points import in Node without browser globals', async ()
   assert.equal(typeof document, 'undefined');
 
   for (const entry of [
-    'ai-context-toolbar',
-    'ai-context-toolbar/react',
-    'ai-context-toolbar/core',
-    'ai-context-toolbar/next',
-    'ai-context-toolbar/config',
-    'ai-context-toolbar/review',
+    '@e6tz/toolkit',
+    '@e6tz/toolkit/react',
+    '@e6tz/toolkit/core',
+    '@e6tz/toolkit/browser',
+    '@e6tz/toolkit/next',
+    '@e6tz/toolkit/config',
+    '@e6tz/toolkit/review',
   ]) {
     const exported = await import(entry);
     assert.ok(Object.keys(exported).length > 0, `${entry} exposes its public API`);
@@ -22,7 +23,7 @@ test('all package entry points import in Node without browser globals', async ()
 });
 
 test('React toolbar renders no DOM on the server, including defaultOpen', async () => {
-  const { AIToolbar } = await import('ai-context-toolbar/react');
+  const { AIToolbar } = await import('@e6tz/toolkit/react');
   for (const props of [
     { environment: 'development', defaultOpen: true },
     { environment: 'preview', branch: 'sprint-1', branches: ['sprint-1'] },
@@ -34,7 +35,7 @@ test('React toolbar renders no DOM on the server, including defaultOpen', async 
 });
 
 test('Next server adapter can render safely without a browser', async () => {
-  const { AIToolbar } = await import('ai-context-toolbar/next');
+  const { AIToolbar } = await import('@e6tz/toolkit/next');
   assert.equal(renderToString(createElement(AIToolbar, { defaultOpen: true })), '');
   assert.equal(renderToString(createElement(AIToolbar, {
     environment: 'production', enabled: true, allowProduction: false,
@@ -42,8 +43,8 @@ test('Next server adapter can render safely without a browser', async () => {
 });
 
 test('Next adapter applies server config flags while explicit props take precedence', async () => {
-  const { AIToolbar } = await import('ai-context-toolbar/next');
-  const { isToolbarEnabled } = await import('ai-context-toolbar/core');
+  const { AIToolbar } = await import('@e6tz/toolkit/next');
+  const { isToolbarEnabled } = await import('@e6tz/toolkit/core');
   const hidden = AIToolbar({ environment: 'production', config: { enabled: { production: false } } });
   assert.equal(hidden.props.environment, 'production');
   assert.equal(hidden.props.enabled, false);
@@ -70,7 +71,7 @@ test('published React entry preserves the Next.js client boundary', async () => 
 });
 
 test('Next adapter forwards only the configured document route and respects its explicit override', async () => {
-  const { AIToolbar } = await import('ai-context-toolbar/next');
+  const { AIToolbar } = await import('@e6tz/toolkit/next');
   const configured = AIToolbar({ config: { documentsPath: '/project/docs' } });
   assert.equal(configured.props.documentsPath, '/project/docs');
   assert.equal('config' in configured.props, false);

@@ -59,7 +59,7 @@ export function WikiRecordingSave({ wiki, locale, sessionId, title, getJson, get
         ...(!remove ? { body: JSON.stringify(update ? { recording: JSON.parse(await getJson()), expectedVersion: saved!.version }
           : { title: title.slice(0, 100), recording: JSON.parse(await getJson()), ...(auth.recordingUpdates === true ? { markdown: await getMarkdown() } : {}) }) } : {}),
       });
-      if (response.status === 409) throw new Error(t('La grabación cambió en ASIDE. Abrila de nuevo antes de actualizar; tu copia local se conserva.'));
+      if (response.status === 409) throw new Error(t('La grabación cambió en Toolkit. Abrila de nuevo antes de actualizar; tu copia local se conserva.'));
       if (!response.ok) throw new Error(t('No se pudo guardar la grabación en la wiki.'));
       if (remove) { setSaved(null); setNotice(t('Eliminada de la wiki. La copia local se conserva.')); }
       else {
@@ -76,7 +76,7 @@ export function WikiRecordingSave({ wiki, locale, sessionId, title, getJson, get
     {!connected ? <WikiSignIn wiki={wiki} locale={locale} /> : <div><button type="button" className="text-button" disabled={busy || !canEdit || updateUnavailable} onClick={() => void change(false)}><Icon name="cloud" />{t(saved ? 'Actualizar en la wiki' : 'Guardar en la wiki')}</button>
       {saved?.canDelete && <button type="button" className="icon-button" disabled={busy} aria-label={t('Eliminar de la wiki')} title={t('Eliminar de la wiki')} onClick={() => void change(true)}><Icon name="trash" /></button>}
     </div>}
-    {saved && <p className="subtle">{t('Compartida en ASIDE. Los cambios locales requieren actualizar.')}</p>}
+    {saved && <p className="subtle">{t('Compartida en Toolkit. Los cambios locales requieren actualizar.')}</p>}
     {updateUnavailable && <p className="subtle">{t('Esta grabación no admite actualizar la evidencia desde esta toolbar.')}</p>}
     {notice && <p className="subtle" role="status">{notice} <a href={wiki.url} target="_blank" rel="noopener noreferrer">{t('Abrir wiki')}</a></p>}
   </div>;

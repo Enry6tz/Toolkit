@@ -12,10 +12,10 @@ export function wikiRecordingErrorMessage(error: unknown, locale: ToolbarLocale)
   const t = createTranslator(locale);
   const code = error instanceof WikiRecordingError ? error.code : 'unavailable';
   return t({
-    auth: 'Iniciá sesión en Aside para ver las grabaciones del proyecto.',
+    auth: 'Iniciá sesión en Toolkit para ver las grabaciones del proyecto.',
     forbidden: 'No tenés acceso a las grabaciones de este proyecto.',
     unavailable: 'No se pudieron cargar las grabaciones. Volvé a intentar.',
-    invalid: 'Aside devolvió datos de grabación no válidos.',
+    invalid: 'Toolkit devolvió datos de grabación no válidos.',
     'too-large': 'La grabación supera el tamaño permitido.',
   }[code]);
 }
@@ -60,7 +60,7 @@ export function WikiRecordingPicker({ wiki, locale, disabled, onChoose }: {
             <Icon name="record" /><span><strong>{item.title}</strong><small>{item.author && <>{item.author} · </>}<time dateTime={item.updatedAt}>{new Date(item.updatedAt).toLocaleString(dateLocale(locale), { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</time></small></span><Icon name="arrow" />
           </button></li>)}
         </ul> : <p className="empty">{t(items.length ? 'Ninguna grabación coincide con la búsqueda.' : 'Todavía no hay grabaciones guardadas en este proyecto.')}</p>}
-        {items.length > 0 && <p className="subtle wiki-recording-copy-note">{t('Se añade una copia local con fechas de importación. La original de Aside no cambia.')}</p>}
+        {items.length > 0 && <p className="subtle wiki-recording-copy-note">{t('Se añade una copia local con fechas de importación. La original de Toolkit no cambia.')}</p>}
       </>}
   </div>;
 }

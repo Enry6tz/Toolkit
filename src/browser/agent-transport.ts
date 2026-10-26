@@ -231,7 +231,7 @@ export function installAgentDomTransport(options: AgentTransportOptions & {
   const result = doc.createElement('script');
   result.type = 'application/json';
   result.setAttribute('data-ai-context-agent-result', '');
-  result.setAttribute('aria-label', 'Resultado de Aside');
+  result.setAttribute('aria-label', 'Resultado de Toolkit');
   const status = doc.createElement('p');
   status.setAttribute('role', 'status');
   form.append(request, button);

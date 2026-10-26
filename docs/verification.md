@@ -1,6 +1,26 @@
 # Standalone extraction verification
 
-This repository contains `ai-context-toolbar` version 0.9.4. The package name, export map, runtime source, original engine range, React peer ranges and UNLICENSED status are preserved.
+This repository contains Toolkit, packaged as `@e6tz/toolkit` version 0.9.4. The export map, original runtime engine range, React peer ranges and UNLICENSED status are preserved. The identity and product-facing copy changed for npm readiness; existing storage, event and bridge identifiers remain unchanged.
+
+## Repeat the readiness checks
+
+```sh
+npm ci
+npx --no-install playwright install chromium
+npm run typecheck
+npm test
+npm run check:package
+```
+
+The GitHub Actions workflow repeats these checks on Node.js 22 and 24, with Chromium system dependencies on Linux. The package check creates a real tarball, verifies allowlisted files and font notices, installs the archive into an independent temporary consumer, imports every entrypoint, compiles strict NodeNext declarations, and exercises server rendering, recording authorization and browser isolation. Its temporary directory is printed and retained for inspection or cleanup.
+
+Public scoped publication is enabled in metadata; scope ownership and the release credential/session still need confirmation. No command above publishes, and CI contains no publication or deployment step.
+
+Locally verified on Windows with Node.js 24.20.0: dependency installation and typecheck passed; 277 Node tests and 47 Vitest tests passed without failures or skips. The independent consumer passed with 267 packed files. Linux CI and its Node.js 22 matrix have not run remotely yet.
+
+## Historical extraction evidence
+
+The remaining sections describe verification performed before the npm-readiness rename, not fresh results for every subsequent revision.
 
 ## Scope
 
@@ -20,7 +40,7 @@ The preceding SDK test harness was adapted to the existing 0.9.4 contracts while
 - Wiki-title tests assert the current 300-character Unicode boundary and still reject 301 characters.
 - Persistence tests address the actual tab-scoped draft alias, including their quota-failure injection. They retain the atomicity, integrity, recovery and deletion checks.
 
-No runtime source changes or test removals were needed.
+No runtime source changes or test removals were needed during the original extraction.
 
 ## Results
 

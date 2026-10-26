@@ -17,7 +17,7 @@ export class WikiRecordingError extends Error {
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const listLimit = 512 * 1024;
 const recordingLimit = 2 * 1024 * 1024;
-// ASIDE permits300 characters when a collaborator renames a saved recording.
+// Toolkit permits 300 characters when a collaborator renames a saved recording.
 const recordingTitleLimit = 300;
 
 function projectUrl(manageUrl: string): string {

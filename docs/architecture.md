@@ -23,4 +23,6 @@ The visible workflow exports text and structured data rather than continuous scr
 
 TypeScript compiles `src` into ESM JavaScript and declarations under `dist`. `scripts/copy-assets.mjs` then copies the local font and its provenance/license files. The `.mjs` build helper preserves the original Node.js 20.9+ engine range without relying on native execution of TypeScript build scripts.
 
-The npm pack allowlist includes `dist`, the README and this architecture document. Source, tests and build tools remain in Git for reproducible GitHub installation. `prepare` supports Git installs and `prepack` builds local tarballs. The package remains unpublished to the npm registry and retains its original UNLICENSED status.
+The npm package is `@e6tz/toolkit`. Its pack allowlist includes `dist`, the README and this architecture document. Source, tests and build tools remain in Git for reproducible GitHub installation. `prepare` supports Git installs and `prepack` builds local tarballs. Public scoped publication is enabled in metadata but requires a separate authorized release. The package retains its original UNLICENSED status.
+
+The test-only GitHub Actions workflow runs types, the Node/browser and Vitest suites, and a packed-consumer check on Node.js 22 and 24. It has read-only repository permissions and no publication step. Existing programmatic symbols, browser bridge globals, event identifiers and storage keys remain compatible.

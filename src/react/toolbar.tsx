@@ -363,7 +363,7 @@ function MountedToolbar(props: AIToolbarProps & { environment: BuildInfo['enviro
       getContext: () => refreshContext(instance), operations, readFile: fileId => instance.readFile(fileId) });
     let bridge: ReturnType<typeof installAgentBridge> | undefined;
     try { bridge = installAgentBridge({ window, recordingOnly: true, getContext: () => reader.current(), getContextV2: () => refreshContext(instance), operations,
-      onSiteToolsStatus: available => instance.setSiteToolsAvailable(available) }); } catch { setError(t("Ya hay otro Aside en esta página.")); }
+      onSiteToolsStatus: available => instance.setSiteToolsAvailable(available) }); } catch { setError(t("Ya hay otro Toolkit en esta página.")); }
     redraw(value => value + 1); void refreshContext(instance).catch(() => {});
     return () => { bridge?.dispose(); handoff.current?.dispose(); handoff.current = null; instance.dispose(); if (controller.current === instance) controller.current = null; };
   }, [root]);
@@ -659,7 +659,7 @@ function MountedToolbar(props: AIToolbarProps & { environment: BuildInfo['enviro
         {message && <p className="subtle" role="status">{t(message)}</p>}{fallback && <label className="field">{fallbackFormat}<textarea readOnly rows={8} value={fallback} onFocus={event => event.currentTarget.select()} /></label>}
       </div>{error && <p className="panel-error" role="alert">{t(error)}</p>}
     </section>}
-    <div className="recording-controls" ref={dock} data-corner={placedCorner} data-expanded={expandedDock} data-compressed={dockPlacement?.compressed ?? false} data-pinned={dockPreferences.pinned} data-recording={recording} data-panel-open={open} role="toolbar" aria-label="Aside"
+    <div className="recording-controls" ref={dock} data-corner={placedCorner} data-expanded={expandedDock} data-compressed={dockPlacement?.compressed ?? false} data-pinned={dockPreferences.pinned} data-recording={recording} data-panel-open={open} role="toolbar" aria-label="Toolkit"
       style={dockPlacement ? { left: dockPlacement.x, right: 'auto', top: dockPlacement.y + (placedCorner.startsWith('top') ? 0 : 48), bottom: 'auto', transform: placedCorner.startsWith('top') ? 'none' : 'translateY(-100%)', maxHeight: Math.max(48, dockPlacement.viewportHeight - 24) } : undefined}
       onPointerEnter={event => { if (event.pointerType === 'mouse') { cancelDockLeave(); setDockHover(true); } }}
       onPointerMove={event => { if (event.pointerType === 'mouse') { cancelDockLeave(); if (!dockHover) setDockHover(true); } }}

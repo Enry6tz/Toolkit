@@ -1,14 +1,20 @@
-# ai-context-toolbar
+# Toolkit
 
 Record a walkthrough, mark what matters, and take the context to your next chat.
 
-`ai-context-toolbar` is a standalone React and Next.js package. This repository preserves version **0.9.4**, its public entrypoints and the original **UNLICENSED** status. It is not published to the npm registry. GitHub source availability does not grant an open-source license.
+`@e6tz/toolkit` is a standalone React and Next.js package. This repository preserves version **0.9.4** and its public entrypoints. Toolkit is licensed under [MIT](LICENSE).
 
 ## Install
 
 Requires Node.js 20.9+ and React / React DOM 18.3 or 19.
 
-Install from this GitHub repository:
+The approved npm package name is `@e6tz/toolkit`. Registry publication is pending scope ownership and maintainer authorization; the command below becomes available after that release:
+
+```sh
+npm install @e6tz/toolkit
+```
+
+Until then, install from this GitHub repository:
 
 ```sh
 npm install git+https://github.com/Enry6tz/Toolkit.git
@@ -26,17 +32,17 @@ npm pack
 Then, from your application, install the actual generated file:
 
 ```sh
-npm install /actual/path/to/ai-context-toolbar-0.9.4.tgz
+npm install /actual/path/to/e6tz-toolkit-0.9.4.tgz
 ```
 
-There is no supported public-registry `npm install ai-context-toolbar` release yet. The package retains `private: true` to prevent accidental registry publication.
+The package metadata permits public scoped publication. Neither building, packing nor the CI workflow publishes a release.
 
 ## React
 
 Mount the toolbar once near the application root so client-side navigation keeps the recorder alive:
 
 ```tsx
-import { AIToolbar } from 'ai-context-toolbar/react';
+import { AIToolbar } from '@e6tz/toolkit/react';
 
 export function App() {
   return (
@@ -55,7 +61,7 @@ Use `environment="preview"` for a preview deployment. Production is off by defau
 The server adapter derives the environment and passes serializable options to the client toolbar:
 
 ```tsx
-import { AIToolbar } from 'ai-context-toolbar/next';
+import { AIToolbar } from '@e6tz/toolkit/next';
 
 export default function RootLayout({ children }) {
   return (
@@ -77,7 +83,7 @@ Start a recording, walk through your application, add marks and comments, stop, 
 
 Network recording is an explicit preference and observes fetch activity only while recording. Resource aliases and bounded request/response previews are configured by the integrator. Omitted or truncated detail remains explicit; review the result before sharing it. The visible workflow does not record video, request screen sharing or create continuous screenshots.
 
-Markdown and JSON exporters are available from `ai-context-toolbar/review`. Project documents can be explicitly bundled through `ai-context-toolbar/config`; all documents shipped to the client are public to recipients of those assets. Optional wiki and live-configuration integrations are configuration-driven, not prerequisites.
+Markdown and JSON exporters are available from `@e6tz/toolkit/review`. Project documents can be explicitly bundled through `@e6tz/toolkit/config`; all documents shipped to the client are public to recipients of those assets. Optional wiki and live-configuration integrations are configuration-driven, not prerequisites.
 
 The package includes no AI model, chat login, token/key flow, server synchronization or automatic message sending. The conversation and the decision about what to do next belong in your own chat.
 
@@ -85,7 +91,7 @@ The package includes no AI model, chat login, token/key flow, server synchroniza
 
 | Import | Purpose |
 | --- | --- |
-| `ai-context-toolbar` / `/react` | Toolbar and React document editor |
+| `@e6tz/toolkit` / `/react` | Toolbar and React document editor |
 | `/next` | Server adapter for Next.js |
 | `/core` | Types, privacy, documents and context normalization |
 | `/browser` | Browser observation and read-only context integration |
@@ -97,15 +103,17 @@ Legacy programmatic case/capture APIs remain part of the source for compatibilit
 ## Development and verification
 
 ```sh
-npm install
+npm ci
+npx --no-install playwright install chromium
 npm run typecheck
-npm run build
 npm test
-npm pack --dry-run
+npm run check:package
 ```
 
 `test:node` runs the existing standalone SDK tests, including browser-backed tests. They need Chromium from the matching Playwright version; if absent, provision it in your environment with `npx playwright install chromium`. `test:unit` runs the isolated navigation, persistence, dock, network-policy and recording-quality tests from the current source. Fixtures are synthetic and do not need an account, database, platform, `.env` file or existing application server.
 
+CI runs these checks on Node.js 22 and 24, including Linux Chromium dependencies. `check:package` builds a real tarball and installs it into an independent temporary consumer, then checks all seven imports, declarations, React/Next server rendering, recording behavior, browser isolation and bundled font notices. It reports the retained temporary directory for inspection and cleanup; it never publishes or needs registry credentials. Use Node.js 22.12+ or 24+ for development; the runtime engine range remains unchanged.
+
 The build copies the bundled Cascadia Code font and its original license notices into `dist`. Generated output, tarballs, dependency folders and local artifacts are ignored by Git.
 
-See [the architecture](docs/architecture.md) for the package boundaries. Font provenance and license notices remain in `src/react/assets`. The package itself remains **UNLICENSED**.
+See [the architecture](docs/architecture.md) for the package boundaries. Toolkit is licensed under [MIT](LICENSE). Bundled fonts retain their original licenses and notices in `src/react/assets` and the distributed assets.

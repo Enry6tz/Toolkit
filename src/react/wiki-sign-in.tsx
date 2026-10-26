@@ -24,9 +24,9 @@ export function WikiSignIn({ wiki, locale }: { wiki: ToolbarWiki; locale: Toolba
   if (!wiki.manageUrl) return null;
   const url = `${wiki.manageUrl}/login?${new URLSearchParams({ app_origin: typeof window === 'undefined' ? '' : window.location.origin, nonce })}`;
   return <>
-    <button className="text-button" type="button" onClick={() => setNonce(Array.from(crypto.getRandomValues(new Uint8Array(16)), byte => byte.toString(16).padStart(2, '0')).join(''))}>{t('Iniciar sesión en Aside')}</button>
-    {nonce && <dialog className="wiki-sign-in" ref={dialog} aria-label={t('Iniciar sesión en Aside')} onCancel={() => setNonce('')}>
-      <header><span>Aside</span><button className="icon-button" type="button" aria-label={t('Cerrar')} onClick={() => setNonce('')}><Icon name="close" /></button></header>
+    <button className="text-button" type="button" onClick={() => setNonce(Array.from(crypto.getRandomValues(new Uint8Array(16)), byte => byte.toString(16).padStart(2, '0')).join(''))}>{t('Iniciar sesión en Toolkit')}</button>
+    {nonce && <dialog className="wiki-sign-in" ref={dialog} aria-label={t('Iniciar sesión en Toolkit')} onCancel={() => setNonce('')}>
+      <header><span>Toolkit</span><button className="icon-button" type="button" aria-label={t('Cerrar')} onClick={() => setNonce('')}><Icon name="close" /></button></header>
       <iframe ref={frame} title={t('Formulario de inicio de sesión de la wiki')} src={url} referrerPolicy="no-referrer" />
     </dialog>}
   </>;

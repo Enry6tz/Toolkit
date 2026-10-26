@@ -481,7 +481,7 @@ export async function exportReviewBundle(frozen: FrozenReview, options: ExportBu
     omitted.push({ path: 'ticket.md', reason: 'Perfil feature; el ticket se ofrece al elegir el perfil bug.' });
     omitted.push({ path: 'ticket.html', reason: 'Perfil feature.' });
   }
-  const readme = ['# Aside · paquete de revisión', `Perfil: ${options.profile} · Estado: ${state}\nSesión: ${md(session.id)} · Revisión: ${snapshot.revision} · Exportado: ${md(exportedAt)}`, simulation,
+  const readme = ['# Toolkit · paquete de revisión', `Perfil: ${options.profile} · Estado: ${state}\nSesión: ${md(session.id)} · Revisión: ${snapshot.revision} · Exportado: ${md(exportedAt)}`, simulation,
     '## Por dónde empezar', options.profile === 'bug' ? 'Abrí ticket.md o ticket.html. Adjuntá manualmente las imágenes necesarias; las rutas del ZIP no crean adjuntos en Plane.' : 'Abrí feature-brief.md. Las imágenes y los documentos están disponibles individualmente para herramientas que no procesan ZIP.',
     'Leé app-context.md para dominio y reglas; context.json conserva los metadatos de esta revisión. journey/ contiene únicamente los pasos y eventos disponibles. manifest.json enumera los hashes SHA-256, tamaños, referencias y ausencias explícitas.',
     '## Faltantes', missingText,
