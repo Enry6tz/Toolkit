@@ -8,13 +8,13 @@ Record a walkthrough, mark what matters, and take the context to your next chat.
 
 Requires Node.js 20.9+ and React / React DOM 18.3 or 19.
 
-The approved npm package name is `@e6tz/toolkit`. Registry publication is pending; the command below becomes available after that release:
+Install the public package from npm:
 
 ```sh
 npm install @e6tz/toolkit
 ```
 
-Until then, install from this GitHub repository:
+Alternatively, install from this GitHub repository:
 
 ```sh
 npm install git+https://github.com/Enry6tz/Toolkit.git
