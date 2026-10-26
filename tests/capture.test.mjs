@@ -220,7 +220,8 @@ test('provider failures and explicit cancellation restore the UI and never produ
 
 test('native current-tab video produces visible and opt-in redacted real pixels with one grant for chat captures', { timeout: 30_000 }, async () => {
   // Test-only picker automation selects an actual rendered tab; no fake media or mock frames.
-  const nativeBrowser = await chromium.launch({ channel: 'chromium', args: ['--auto-select-tab-capture-source-by-title=Real capture test', '--allow-http-screen-capture'] });
+  // Pin the GL driver: the software compositor can shift native-video colours before capture reaches the SDK.
+  const nativeBrowser = await chromium.launch({ channel: 'chromium', args: ['--use-gl=angle', '--use-angle=swiftshader', '--auto-select-tab-capture-source-by-title=Real capture test', '--allow-http-screen-capture'] });
   const page = await nativeBrowser.newPage({ viewport: { width: 1000, height: 700 }, deviceScaleFactor: 1 });
   try {
     await page.goto(base);
@@ -290,7 +291,7 @@ test('native current-tab video produces visible and opt-in redacted real pixels 
 });
 
 test('native stream rejects a different real tab and releases its tracks', { timeout: 20_000 }, async () => {
-  const nativeBrowser = await chromium.launch({ channel: 'chromium', args: ['--auto-select-tab-capture-source-by-title=Wrong capture surface', '--allow-http-screen-capture'] });
+  const nativeBrowser = await chromium.launch({ channel: 'chromium', args: ['--use-gl=angle', '--use-angle=swiftshader', '--auto-select-tab-capture-source-by-title=Wrong capture surface', '--allow-http-screen-capture'] });
   try {
     const other = await nativeBrowser.newPage(); await other.goto(base); await other.evaluate(() => { document.title='Wrong capture surface'; });
     const page = await nativeBrowser.newPage(); await page.goto(base);
