@@ -1,8 +1,12 @@
 # Toolkit
 
+[Website](https://toolkit.6tz.tech) · [npm: @e6tz/toolkit](https://www.npmjs.com/package/@e6tz/toolkit) · [MIT](LICENSE)
+
+[![Toolkit landing preview](docs/images/landing-preview.jpg)](https://toolkit.6tz.tech)
+
 Record a walkthrough, mark what matters, and take the context to your next chat.
 
-`@e6tz/toolkit` is a standalone React and Next.js package. This repository preserves version **0.9.4** and its public entrypoints. Toolkit is licensed under [MIT](LICENSE).
+`@e6tz/toolkit` is a standalone React and Next.js package. Version **0.9.4** is available on npm with its documented public entrypoints. Toolkit is licensed under [MIT](LICENSE).
 
 ## Install
 
