@@ -2,11 +2,11 @@
 
 Toolkit is a library. Your application supplies the interface around it, authentication, permissions and any backend. No Toolkit account, login service, database or remote endpoint is required for local recording and export.
 
-This guide covers Toolkit's host contract. Reports and Flags follow the same ownership model, with their own transport interfaces and endpoint contracts.
+This guide covers Toolkit's host contract. Reports and Flags follow the same ownership model, with their own transport interfaces and endpoint contracts. For complete response shapes, reference storage records and server acceptance checks, see the [backend implementation guide](backend-integration.md).
 
 ## Start locally
 
-Install `@e6tz/toolkit` after registry publication, or use the repository/tarball installation described in the [README](../README.md). Requires Node.js 20.9+ and React / React DOM 18.3 or 19.
+Install the published `@e6tz/toolkit` package from npm, or use the repository/tarball installation described in the [README](../README.md). Requires Node.js 20.9+ and React / React DOM 18.3 or 19.
 
 ```tsx
 import { AIToolbar } from '@e6tz/toolkit/react';

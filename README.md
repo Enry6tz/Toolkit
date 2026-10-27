@@ -101,7 +101,9 @@ Enable each remote integration explicitly by supplying its URL or callback. A se
 
 The host owns login and permission enforcement. Toolkit has no embedded login iframe or credential issuance, renewal or storage. Configured wiki requests retain session cookies and CSRF protection; the host must authorize every read and mutation. A hidden or disabled client control is not a security boundary.
 
-See the [host integration guide](docs/host-integration.md) for React/Next examples, endpoint contracts, authentication refresh and teardown. The guide is included in the npm package. A combined self-hosted host application is not supplied by this repository.
+See the [backend implementation guide](docs/backend-integration.md) for wire contracts, reference storage records and acceptance checks, or the [website documentation](https://toolkit.6tz.tech/docs/).
+
+See the [host integration guide](docs/host-integration.md) for React/Next examples, authentication refresh and teardown. The lifecycle guide is included in the published npm package; the newer backend guide is available in this repository and on the website without republishing that version. A combined self-hosted host application is not supplied by this repository.
 
 ## Entrypoints
 
